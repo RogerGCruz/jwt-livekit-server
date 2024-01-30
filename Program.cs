@@ -11,7 +11,7 @@ ParseJWT(token);
 
 static string Base64UrlEncode(string input)
 {
-    var inputBytes = Encoding.UTF8.GetBytes(input);
+    var inputBytes = Encoding.Latin1.GetBytes(input);
     var base64 = Convert.ToBase64String(inputBytes);
     var base64Url = base64.TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
@@ -20,13 +20,12 @@ static string Base64UrlEncode(string input)
 
 static string ComputeSignature(string input)
 {
-    var keyBytes = Encoding.UTF8.GetBytes(secretKey);
+    var keyBytes = Encoding.Latin1.GetBytes(secretKey);
     using var algorithm = new HMACSHA256(keyBytes);
-    var inputBytes = Encoding.UTF8.GetBytes(input);
+    var inputBytes = Encoding.Latin1.GetBytes(input);
     var signatureBytes = algorithm.ComputeHash(inputBytes);
 
-    //return Base64UrlEncode(Encoding.UTF8.GetString(signatureBytes));
-    return Convert.ToBase64String(signatureBytes);
+    return Base64UrlEncode(Encoding.Latin1.GetString(signatureBytes));
 }
 
 static string Base64UrlDecode(string input)
@@ -38,7 +37,7 @@ static string Base64UrlDecode(string input)
     }
     var base64Bytes = Convert.FromBase64String(base64);
 
-    return Encoding.UTF8.GetString(base64Bytes);
+    return Encoding.Latin1.GetString(base64Bytes);
 
 }
 
